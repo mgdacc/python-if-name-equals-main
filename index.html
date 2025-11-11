@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: if __name__ == "__main__"</title>
+    <style>
+        /* === ESTILOS GLOBALES Y DE ESCRITORIO === */
+        body {
+            font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0;
+            padding: 40px; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; box-sizing: border-box; transition: padding 0.3s ease;
+        }
+
+        .slideshow-container { position: relative; width: 90%; max-width: 960px; }
+        
+        .slide {
+            display: none; background-color: #fff; border: 1px solid #ccc;
+            height: 540px; padding: 40px 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column; justify-content: center; position: relative;
+            box-sizing: border-box;
+        }
+
+        .fade { animation-name: fade; animation-duration: 0.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; background-color: #cccccc; color: #333;
+            border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 24px; transition: all 0.3s ease;
+            user-select: none; z-index: 10;
+        }
+
+        .prev { left: -70px; }
+        .next { right: -70px; }
+        .prev:hover, .next:hover { background-color: #aaaaaa; }
+
+        .slide h1 { font-size: 3.5em; text-align: center; border-bottom: 4px solid #11a800; padding-bottom: 20px; color: #005A9C; }
+        .slide h2 { font-size: 2.8em; margin-top: 0; margin-bottom: 30px; text-align: center; color: #005A9C; }
+        .single-content { text-align: center; }
+        .single-content p { font-size: 1.5em; color: #444; text-align: left; }
+        .single-content pre { font-size: 1.2em; display: inline-block; text-align: left; max-width: 100%; margin: 0 auto; }
+        pre { background-color: #2d3636; color: #fff; padding: 15px; border-radius: 5px; font-size: 1.1em; white-space: pre-wrap; word-wrap: break-word;}
+        .footer { position: absolute; bottom: 20px; right: 40px; font-size: 1em; color: #888; }
+        table { width: 100%; border-collapse: collapse; font-size: 1.2em; margin-top:20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #005A9C; color: white; }
+        code { font-family: monospace; padding: 2px 4px; border-radius: 3px; }
+
+        /* === MEDIA QUERIES === */
+        @media screen and (max-width: 768px) {
+            body { padding: 15px; }
+            .slideshow-container { width: 100%; padding-bottom: 75px; }
+            .slide { height: auto; min-height: 75vh; padding: 20px 25px; }
+            .prev, .next { top: auto; bottom: 15px; width: 45px; height: 45px; }
+            .prev { left: 50%; transform: translateX(-110%); }
+            .next { left: 50%; transform: translateX(10%); right: auto; }
+            .slide h1 { font-size: 2.2em; }
+            .slide h2 { font-size: 1.8em; }
+            .single-content p { font-size: 1.1em; }
+            .single-content pre { font-size: 1em; }
+            table { font-size: 0.9em; }
+            .footer { font-size: 0.8em; right: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slideshow-container">
+        
+        <div class="slide fade">
+            <h1>Cheat Sheet de Python</h1>
+            <h2 style="color:#333; border:none;"><code>if __name__ == "__main__"</code></h2>
+            <div class="footer">1 / 10</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>El Problema Central</h2>
+            <div class="single-content"><p>Un archivo Python puede usarse de dos maneras:</p><p>1. <b>Ejecutándolo directamente.</b></p><p>2. <b>Importándolo</b> en otro archivo.</p><p>Necesitamos una forma de que el código se comporte diferente en cada caso.</p></div>
+            <div class="footer">2 / 10</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>La Pieza Clave: <code>__name__</code></h2>
+            <div class="single-content"><p>Python crea una variable especial llamada <code>__name__</code> en cada script.</p><p>Su valor cambia dependiendo de cómo se usa el archivo, permitiéndonos detectar el modo de ejecución.</p></div>
+            <div class="footer">3 / 10</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>El Comportamiento de <code>__name__</code></h2>
+             <table>
+                <tr>
+                    <th>Modo de Ejecución</th>
+                    <th>Valor de <code>__name__</code></th>
+                </tr>
+                <tr>
+                    <td>Directa:<br><code>$ python mi_script.py</code></td>
+                    <td><code>"__main__"</code></td>
+                </tr>
+                <tr>
+                    <td>Indirecta:<br><code>import mi_script</code></td>
+                    <td><code>"mi_script"</code></td>
+                </tr>
+            </table>
+            <div class="footer">4 / 10</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Caso de Estudio: Un Módulo Simple</h2>
+            <div class="single-content"><p>Imaginemos un módulo <code>calculadora.py</code>. Contiene una función y un código de ejemplo que se ejecuta siempre.</p><pre><code># calculadora.py
+
+def sumar(a, b):
+    return a + b
+
+# Este código se ejecuta SIEMPRE
+print("Módulo calculadora cargado.")
+resultado_ejemplo = sumar(5, 3)
+print(f"Ejemplo: 5 + 3 = {resultado_ejemplo}")</code></pre></div>
+            <div class="footer">5 / 10</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>El Efecto Secundario al Importar</h2>
+            <div class="single-content"><p>Ahora, un archivo <code>principal.py</code> importa <code>calculadora</code> para usar su función.</p><pre><code># principal.py
+import calculadora
+
+total = calculadora.sumar(10, 20)
+print(f"El total es: {total}")</code></pre><p><b>Problema:</b> El código de ejemplo de <code>calculadora.py</code> se ejecuta, ensuciando la salida.</p></div>
+            <div class="footer">6 / 10</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>La Salida Indeseada</h2>
+            <div class="single-content"><p>Al ejecutar <code>principal.py</code>, vemos esto en la terminal:</p><pre><code>$ python principal.py
+Módulo calculadora cargado.
+Ejemplo: 5 + 3 = 8
+El total es: 30</code></pre><p>Queremos que solo se muestre la última línea.</p></div>
+            <div class="footer">7 / 10</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>La Solución: Proteger el Código</h2>
+            <div class="single-content"><p>Movemos el código de ejemplo dentro del bloque <code>if __name__ == "__main__"</code> en <code>calculadora.py</code>.</p><pre><code># calculadora.py
+def sumar(a, b):
+    return a + b
+
+# Este código ahora está protegido
+if __name__ == "__main__":
+    print("Módulo ejecutado directamente.")
+    resultado_ejemplo = sumar(5, 3)
+    print(f"Ejemplo: 5 + 3 = {resultado_ejemplo}")</code></pre></div>
+            <div class="footer">8 / 10</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>El Resultado Final y Limpio</h2>
+            <div class="single-content"><p>Ahora, al ejecutar <code>principal.py</code> de nuevo, la condición <code>if</code> en <code>calculadora.py</code> es falsa (porque <code>__name__</code> es <code>"calculadora"</code> debido a que llama (o ejecuta de manera indirecta) a <code>calculadora.py</code>).</p><pre><code>$ python principal.py
+El total es: 30</code></pre><p>¡Perfecto! El módulo es ahora 100% reutilizable y sin efectos secundarios.</p></div>
+            <div class="footer">9 / 10</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Conclusión</h2>
+            <div class="single-content"><p>Usa <code>if __name__ == "__main__":</code> para:</p><p><b>1. Crear módulos reutilizables.</b></p><p><b>2. Separar la lógica principal</b> de las definiciones de funciones y clases.</p><p><b>3. Incluir pruebas o demos</b> que solo se ejecuten cuando corres el archivo directamente.</p></div>
+            <div class="footer">10 / 10</div>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            if (n > slides.length) { slideIndex = 1 } 
+            if (n < 1) { slideIndex = slides.length }
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            slides[slideIndex - 1].style.display = "flex";
+        }
+        
+        // Navegación con teclas de flecha
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                plusSlides(-1);
+            } else if (event.key === 'ArrowRight') {
+                plusSlides(1);
+            }
+        });
+    </script>
+
+</body>
+</html>
